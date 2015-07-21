@@ -17,6 +17,8 @@ package com
 import (
 	"errors"
 	"os"
+	"os/exec"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -77,4 +79,22 @@ func HomeDir() (home string, err error) {
 	}
 
 	return home, nil
+}
+
+func ExecPath() (string, error) {
+	file, err := exec.LookPath(os.Args[0])
+	if err != nil {
+		return "", err
+	}
+	p, err := filepath.Abs(file)
+	if err != nil {
+		return "", err
+	}
+	return p, nil
+}
+
+// WorkDir returns absolute path of work directory.
+func WorkDir() (string, error) {
+	execPath, err := ExecPath()
+	return path.Dir(strings.Replace(execPath, "\\", "/", -1)), err
 }
