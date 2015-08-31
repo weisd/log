@@ -37,6 +37,15 @@ func NewLogger(bufLen int64, mode, config string) {
 	}
 }
 
+func NewCustomLogger(bufLen int64, mode, config string) *Logger {
+	logger := newLogger(bufLen)
+	if err := logger.SetLogger(mode, config); err != nil {
+		Fatal(1, "Fail to set logger(%s): %v", mode, err)
+	}
+
+	return logger
+}
+
 func NewGitLogger(logPath string) {
 	os.MkdirAll(path.Dir(logPath), os.ModePerm)
 	GitLogger = newLogger(0)
